@@ -4,9 +4,12 @@ import { Listings } from './sections';
 import * as serviceWorker from './serviceWorker';
 
 render(
+	// takes 2 arguments
+	// 1. what's being rendered
 	<React.StrictMode>
 		<Listings title='TinyHouse Listings' />
 	</React.StrictMode>,
+	// 2. where it's being rendered
 	document.getElementById('root')
 );
 
