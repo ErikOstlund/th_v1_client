@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { server } from '../../lib/api';
+import React from 'react';
+import { server, useQuery } from '../../lib/api';
 import {
-	Listing,
 	ListingsData,
 	DeleteListingData,
 	DeleteListingVariables
@@ -37,18 +36,8 @@ interface Props {
 }
 
 export const Listings = ({ title }: Props) => {
-	// const [listings, setListings] = useState<Listing[] | null>(null);
-	const [listings, setListings] = useState<Listing[]>([]);
-
-	useEffect(() => {
-		fetchListings();
-	}, []);
-
-	const fetchListings = async () => {
-		const { data } = await server.fetch<ListingsData>({ query: LISTINGS });
-		setListings(data.listings);
-		console.log(data);
-	};
+	// use our custom useQuery hook
+	const { data } = useQuery<ListingsData>(LISTINGS);
 
 	const deleteListing = async (id: string) => {
 		await server.fetch<DeleteListingData, DeleteListingVariables>({
@@ -57,11 +46,11 @@ export const Listings = ({ title }: Props) => {
 				id
 			}
 		});
-		// hope there's a better way of updating state/UI than making api call
-		fetchListings();
 	};
 
-	const listingsList = (
+	const listings = data ? data.listings : null;
+
+	const listingsList = listings ? (
 		<ul>
 			{listings.map((listing) => {
 				return (
@@ -74,7 +63,7 @@ export const Listings = ({ title }: Props) => {
 				);
 			})}
 		</ul>
-	);
+	) : null;
 
 	return (
 		<div>
